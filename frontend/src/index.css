@@ -1,0 +1,16 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  fill: hsl(233, 11%, 84%);
+  transition: fill 0.2s ease;
+}
+
+.icon:hover {
+  fill: white;
+  cursor: pointer;
+}
