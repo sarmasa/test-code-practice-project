@@ -51,7 +51,7 @@ export async function updateEmployee(req, res, next) {
   try {
     const { id } = req.params;
     const { name, email, age, salary, role } = req.body;
-    const result = query(updateEmployeeQuery, [name, email, age, role, salary, id]);
+    const result = await query(updateEmployeeQuery, [name, email, age, role, salary, id]);
     if (result.rowCount === 0) {
       return res.status(400).json({ error: 'Employee not found' });
     }

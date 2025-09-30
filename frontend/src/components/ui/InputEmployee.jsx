@@ -80,7 +80,6 @@ const InputEmployee = ({ children, type = 'add', data }) => {
       }
     }
     const infoUpdated = { ...info, role: info.role || null };
-    console.log(infoUpdated);
     if (type === 'add') {
       addEmployeeMutation.mutate(infoUpdated);
     } else {
