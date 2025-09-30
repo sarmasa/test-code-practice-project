@@ -10,14 +10,15 @@ import {
 } from '../utils/sqlQuery.js';
 
 import { createError } from '../utils/error.js';
-// contller
+
 export async function getAllEmployee(req, res, next) {
   try {
+    // SQLite3でテーブルの存在確認
     const response = await query(`
-            SELECT to_regclass('employee_details');
-        `);
-    if (!response.row[0].to_regclass) {
-      await query(createRoleQuery);
+      SELECT name FROM sqlite_master WHERE type='table' AND name='employee_details'
+    `);
+    if (response.rows.length === 0) {
+      // テーブルが存在しない場合は作成
       await query(createEmployeeTableQuery);
     }
     const { rows } = await query(getAllEmployeeQuery);

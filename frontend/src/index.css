@@ -14,3 +14,7 @@ body {
   fill: white;
   cursor: pointer;
 }
+
+.select {
+  z-index: 10000;
+}

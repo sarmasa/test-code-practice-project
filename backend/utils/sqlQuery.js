@@ -1,37 +1,37 @@
+// SQLite3用のクエリ（ENUMの代わりにCHECK制約を使用）
 export const createRoleQuery = `
-    CREATE TYPE role_type AS
-    ENUM('Manager', 'Developer', 'HR', 'Sales', 'Intern');
+    -- SQLite3にはENUMがないため、テーブル作成時にCHECK制約で代用
 `;
+
 export const createEmployeeTableQuery = `
     CREATE TABLE employee_details(
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(50) NOT NULL,
-        email VARCHAR(50) NOT NULL UNIQUE,
-        age SMALLINT NOT NULL CHECK (age > 17),
-        role role_type NOT NULL DEFAULT 'Intern',
-        salary DECIMAL(8,2) NOT NULL
-    );
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        age INTEGER NOT NULL CHECK (age > 17),
+        role TEXT NOT NULL DEFAULT 'Intern' CHECK (role IN ('Manager', 'Developer', 'HR', 'Sales', 'Intern')),
+        salary REAL NOT NULL
+    )
 `;
 
 export const getAllEmployeeQuery = `SELECT * FROM employee_details`;
 
 export const createEmployeeQuery = `
     INSERT INTO employee_details(name,email,age,role,salary)
-    VALUES($1,$2,$3,COALESCE($4::role_type,'Intern'::role_type),$5) RETURNING *
+    VALUES(?,?,?,COALESCE(?,'Intern'),?)
 `;
 
-export const getEmployeeQuery = `SELECT * FROM employee_details WHERE id = $1`;
+export const getEmployeeQuery = `SELECT * FROM employee_details WHERE id = ?`;
 
-export const deleteEmployeeQuery = `DELETE FROM employee_details WHERE id = $1`;
+export const deleteEmployeeQuery = `DELETE FROM employee_details WHERE id = ?`;
 
 export const updateEmployeeQuery = `
     UPDATE employee_details
     SET
-    name = COALESCE($1,name),
-    email = COALESCE($2,email),
-    age = COALESCE($3,age),
-    role = COALESCE($4::role_type,role),
-    salary = COALESCE($5,salary)
-    WHERE id = $6
-    RETURNING *
+    name = COALESCE(?,name),
+    email = COALESCE(?,email),
+    age = COALESCE(?,age),
+    role = COALESCE(?,role),
+    salary = COALESCE(?,salary)
+    WHERE id = ?
 `;

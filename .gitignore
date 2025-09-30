@@ -25,3 +25,8 @@ dist-ssr
 
 # environment
 .env
+*.sqlite
+
+# ai
+.claude
+.serena
