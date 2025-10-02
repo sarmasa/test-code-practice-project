@@ -7,6 +7,7 @@ import SelectRole from './SelectRole.jsx';
 import { Field } from './field.jsx';
 import { baseUrl } from '../../../constants/global-variable.js';
 import { queryClient } from '../../../utils/queryClient.js';
+import { validateEmployee } from '../../utils/validation.js';
 
 const InputEmployee = ({ children, type = 'add', data }) => {
   const [open, setOpen] = useState(false);
@@ -70,15 +71,14 @@ const InputEmployee = ({ children, type = 'add', data }) => {
     },
   });
 
-  const requiredFields = ['name', 'age', 'salary', 'email'];
-
   const handleSubmit = () => {
-    for (const key of requiredFields) {
-      if (!info[key].toString().trim()) {
-        toast.error('Missing fields!');
-        return;
-      }
+    const { isValid, errors } = validateEmployee(info);
+
+    if (!isValid) {
+      errors.forEach((error) => toast.error(error));
+      return;
     }
+
     const infoUpdated = { ...info, role: info.role || null };
     if (type === 'add') {
       addEmployeeMutation.mutate(infoUpdated);
